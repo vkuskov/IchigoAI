@@ -65,6 +65,10 @@ namespace IchigoAI.BT {
             context.SetTaskState(TaskStateIndex, taskState);
         }
 
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
+
         public override bool Equals(object obj) {
             if (base.Equals(obj)) {
                 var composite = (CompositeTask)obj;

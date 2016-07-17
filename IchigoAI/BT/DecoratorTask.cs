@@ -45,6 +45,10 @@ namespace IchigoAI.BT {
             return Status.Failure;
         }
 
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
+
         public override bool Equals(object obj) {
             if (base.Equals(obj)) {
                 var decorator = (DecoratorTask)obj;
