@@ -36,69 +36,70 @@ namespace IchigoAI.Test.BT {
         void before_each() {
             _parallel = new SimpleParallel();
             addAllTo(_parallel);
+            initContext(_parallel);
         }
 
         void describe_parallel() {
             it["Should execute all tasks if they're running"] = () => {
                 setAll(Status.Running);
-                _parallel.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_parallel).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should success if one task succeded"] = () => {
                 setAll(Status.Running);
-                _tasks[1].Tick().Returns(Status.Success);
-                _parallel.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Success);
+                tick(_parallel).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should fail if one task failed"] = () => {
                 setAll(Status.Running);
-                _tasks[1].Tick().Returns(Status.Failure);
-                _parallel.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Failure);
+                tick(_parallel).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should start over if all tasks are running"] = () => {
                 setAll(Status.Running);
-                _parallel.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_parallel).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
                 clearCalls();
-                _parallel.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_parallel).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should start over if one task succeded"] = () => {
                 setAll(Status.Running);
-                _tasks[1].Tick().Returns(Status.Success);
-                _parallel.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Success);
+                tick(_parallel).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _parallel.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                tick(_parallel).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should start over if one task failed"] = () => {
                 setAll(Status.Running);
-                _tasks[1].Tick().Returns(Status.Failure);
-                _parallel.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Failure);
+                tick(_parallel).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _parallel.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                tick(_parallel).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
         }
     }

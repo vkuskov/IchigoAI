@@ -42,8 +42,12 @@ namespace IchigoAI.Test.BT {
 
         protected void setAll(Status status) {
             foreach (var it in _tasks) {
-                it.Tick().Returns(status);
+                it.Tick(Arg.Is(_context)).Returns(status);
             }
+        }
+
+        protected void setReturn(int index, Status status) {
+            _tasks[index].Tick(Arg.Is(_context)).Returns(status);
         }
 
         protected void addAllTo(CompositeTask task) {

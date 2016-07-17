@@ -38,71 +38,72 @@ namespace IchigoAI.Test.BT {
         void before_each() {
             _sequence = new Sequence();
             addAllTo(_sequence);
+            initContext(_sequence);
         }
 
         void describe_sequence() {            
             it["Should success and call all tasks if all nodes were successful"] = () => {
                 setAll(Status.Success);
-                _sequence.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_sequence).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should fail and call two tasks if second task failed"] = () => {
                 setAll(Status.Success);
-                _tasks[1].Tick().Returns(Status.Failure);
-                _sequence.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Failure);
+                tick(_sequence).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should be running and call two tasks if second task is running"] = () => {
                 setAll(Status.Success);
-                _tasks[1].Tick().Returns(Status.Running);
-                _sequence.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Running);
+                tick(_sequence).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should move to last task and run if second task finished running and last task started"] = () => {
                 setAll(Status.Success);
-                _tasks[1].Tick().Returns(Status.Running);
-                _sequence.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Running);
+                tick(_sequence).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _tasks[1].Tick().Returns(Status.Success);
-                _tasks[2].Tick().Returns(Status.Running);
-                _sequence.Tick().should_be(Status.Running);
-                _tasks[0].DidNotReceive().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                setReturn(1, Status.Success);
+                setReturn(2, Status.Running);
+                tick(_sequence).should_be(Status.Running);
+                _tasks[0].DidNotReceive().Tick(Arg.Any<Context>());
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should start again after success"] = () => {
                 setAll(Status.Success);
-                _sequence.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_sequence).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
                 clearCalls();
-                _sequence.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_sequence).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should start from again after failure"] = () => {
                 setAll(Status.Success);
-                _tasks[1].Tick().Returns(Status.Failure);
-                _sequence.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Failure);
+                tick(_sequence).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _sequence.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                tick(_sequence).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
         }
     }

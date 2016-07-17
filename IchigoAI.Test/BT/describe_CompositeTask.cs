@@ -36,6 +36,7 @@ namespace IchigoAI.Test.BT {
 
         void before_each() {
             _task = new CompositeTask();
+            initContext(_task);
         }
 
         void describe_composite_task() {
@@ -49,7 +50,7 @@ namespace IchigoAI.Test.BT {
                 _task.Tasks[0].should_be(child1);
                 _task.Tasks[1].should_be(child2);
             };
-            it["Should fail without nodes"] = () => _task.Tick().should_be(Status.Failure);
+            it["Should fail without nodes"] = () => tick(_task).should_be(Status.Failure);
             it["Should serialize"] = () => testSerialization(_task);
         }
     }
