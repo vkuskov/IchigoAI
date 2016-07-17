@@ -55,14 +55,14 @@ namespace IchigoAI.BT {
         }
 
         protected int getCurrentCounter(Context context) {
-            var taskState = context.GetTaskState(TaskStateIndex);
+            var taskState = context.getTaskState(TaskStateIndex);
             return taskState.counter;
         }
 
         protected void setCurrentCounter(Context context, int counter) {
-            var taskState = context.GetTaskState(TaskStateIndex);
+            var taskState = context.getTaskState(TaskStateIndex);
             taskState.counter = counter;
-            context.SetTaskState(TaskStateIndex, taskState);
+            context.setTaskState(TaskStateIndex, taskState);
         }
 
         public override int GetHashCode() {

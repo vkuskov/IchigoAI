@@ -27,7 +27,7 @@ using System;
 
 namespace IchigoAI {
     
-    public enum TaskState {
+    internal enum TaskState {
         Invalid,
         Initialized,
         Execute,

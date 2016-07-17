@@ -10,29 +10,6 @@ namespace IchigoAI.Test {
             _context = new Context();
         }
 
-        void describe_task_state() {
-            it["Should crate task state indices"] = () => {
-                for (int i = 0; i < 100; ++i) {
-                    _context.CreateState().should_be(i);
-                }
-            };
-            context["Store and restore state"] = () => {
-                beforeEach = () => {
-                    _context.CreateState();
-                };
-                it["Stored state should be same as restored"] = () => {
-                    var state = new CurrentTaskState() {
-                        state = TaskState.Finished,
-                        counter = 666
-                    };
-                    _context.SetTaskState(0, state);
-                    var restored = _context.GetTaskState(0);
-                    restored.state.should_be(state.state);
-                    restored.counter.should_be(state.counter);
-                };
-            };
-        }
-
         void desrive_tast_context() {
             it["Should create task context indices"] = () => {
                 for (int i = 0; i < 100; ++i) {

@@ -42,7 +42,7 @@ namespace IchigoAI.BT {
         public void InitContext(Context context) {
             if (context == null)
                 throw new NullReferenceException("Can't init null task context");
-            int stateIndex = context.CreateState();
+            int stateIndex = context.createState();
             // Task tree should be determenistic
             // So if we have got different index then tree was changed and our context is invalid
             if (TaskStateIndex >= 0 && stateIndex != TaskStateIndex)
@@ -76,13 +76,13 @@ namespace IchigoAI.BT {
         }
 
         private TaskState getTaskState(Context context) {
-            return context.GetTaskState(TaskStateIndex).state;
+            return context.getTaskState(TaskStateIndex).state;
         }
 
         private void setTaskState(Context context, TaskState state) {
-            var taskState = context.GetTaskState(TaskStateIndex);
+            var taskState = context.getTaskState(TaskStateIndex);
             taskState.state = state;
-            context.SetTaskState(TaskStateIndex, taskState);
+            context.setTaskState(TaskStateIndex, taskState);
         }
 
         protected virtual void onInitContext(Context context) {

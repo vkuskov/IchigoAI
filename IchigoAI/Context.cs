@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace IchigoAI {
 
-    public struct CurrentTaskState {
+    internal struct CurrentTaskState {
         public TaskState state;
         public int counter;
 
@@ -17,7 +17,7 @@ namespace IchigoAI {
         private List<CurrentTaskState> _perTaskState = new List<CurrentTaskState>();
         private List<object> _perTaskContext = new List<object>();
 
-        public int CreateState() {
+        internal int createState() {
             var index = _perTaskState.Count;
             _perTaskState.Add(new CurrentTaskState() {
                 state = TaskState.Invalid,
@@ -26,11 +26,11 @@ namespace IchigoAI {
             return index;
         }
 
-        public CurrentTaskState GetTaskState(int index) {
+        internal CurrentTaskState getTaskState(int index) {
             return _perTaskState[index];
         }
 
-        public void SetTaskState(int index, CurrentTaskState state) {
+        internal void setTaskState(int index, CurrentTaskState state) {
             _perTaskState[index] = state;
         }
 
