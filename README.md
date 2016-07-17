@@ -1,0 +1,2 @@
+# IchigoAI
+Game AI library
