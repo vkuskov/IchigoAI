@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PolicySet name="Heartcatch.mdpolicy">
+  <DotNetNamingPolicy>
+    <DirectoryNamespaceAssociation>Hierarchical</DirectoryNamespaceAssociation>
+    <ResourceNamePolicy>FileName</ResourceNamePolicy>
+  </DotNetNamingPolicy>
+  <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp">
+    <EolMarker>Unix</EolMarker>
+  </TextStylePolicy>
+  <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp">
+    <IndentSwitchBody>True</IndentSwitchBody>
+    <NamespaceBraceStyle>EndOfLine</NamespaceBraceStyle>
+    <ClassBraceStyle>EndOfLine</ClassBraceStyle>
+    <InterfaceBraceStyle>EndOfLine</InterfaceBraceStyle>
+    <StructBraceStyle>EndOfLine</StructBraceStyle>
+    <EnumBraceStyle>EndOfLine</EnumBraceStyle>
+    <MethodBraceStyle>EndOfLine</MethodBraceStyle>
+    <ConstructorBraceStyle>EndOfLine</ConstructorBraceStyle>
+    <DestructorBraceStyle>EndOfLine</DestructorBraceStyle>
+    <BeforeMethodDeclarationParentheses>False</BeforeMethodDeclarationParentheses>
+    <BeforeMethodCallParentheses>False</BeforeMethodCallParentheses>
+    <BeforeConstructorDeclarationParentheses>False</BeforeConstructorDeclarationParentheses>
+    <BeforeIndexerDeclarationBracket>False</BeforeIndexerDeclarationBracket>
+    <BeforeDelegateDeclarationParentheses>False</BeforeDelegateDeclarationParentheses>
+    <AfterDelegateDeclarationParameterComma>True</AfterDelegateDeclarationParameterComma>
+    <NewParentheses>False</NewParentheses>
+    <SpacesBeforeBrackets>False</SpacesBeforeBrackets>
+    <BlankLinesBeforeUsings>1</BlankLinesBeforeUsings>
+    <BlankLinesBetweenMembers>0</BlankLinesBetweenMembers>
+    <AlignToFirstMethodDeclarationParameter>False</AlignToFirstMethodDeclarationParameter>
+    <AlignToFirstIndexerDeclarationParameter>False</AlignToFirstIndexerDeclarationParameter>
+  </CSharpFormattingPolicy>
+  <StandardHeader>
+    <Text>Copyright (c) ${Year} ${CopyrightHolder}</Text>
+    <IncludeInNewFiles>True</IncludeInNewFiles>
+  </StandardHeader>
+  <NameConventionPolicy>
+    <Rules>
+      <NamingRule>
+        <Name>PascalCase</Name>
+        <AffectedEntity>Namespace, Class, Struct, Enum, Delegate, Event, EnumMember, Label</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Interfaces</Name>
+        <RequiredPrefixes>
+          <String>I</String>
+        </RequiredPrefixes>
+        <AffectedEntity>Interface</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Attributes</Name>
+        <RequiredSuffixes>
+          <String>Attribute</String>
+        </RequiredSuffixes>
+        <AffectedEntity>CustomAttributes</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Event Args</Name>
+        <RequiredSuffixes>
+          <String>EventArgs</String>
+        </RequiredSuffixes>
+        <AffectedEntity>CustomEventArgs</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Exceptions</Name>
+        <RequiredSuffixes>
+          <String>Exception</String>
+        </RequiredSuffixes>
+        <AffectedEntity>CustomExceptions</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>camelCase</Name>
+        <AffectedEntity>Property, Parameter, LambdaParameter, LocalVariable</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>CamelCaseWithLowerLetterUnderscore</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Fields (non public)</Name>
+        <RequiredPrefixes>
+          <String>_</String>
+        </RequiredPrefixes>
+        <AffectedEntity>Field, ReadonlyField</AffectedEntity>
+        <VisibilityMask>Private, Internal, Protected</VisibilityMask>
+        <NamingStyle>CamelCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Fields</Name>
+        <AffectedEntity>Field, ReadonlyField</AffectedEntity>
+        <VisibilityMask>Public</VisibilityMask>
+        <NamingStyle>CamelCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Methods (public)</Name>
+        <AffectedEntity>Methods</AffectedEntity>
+        <VisibilityMask>Public</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Methods</Name>
+        <AffectedEntity>Methods</AffectedEntity>
+        <VisibilityMask>Private, Internal, Protected</VisibilityMask>
+        <NamingStyle>CamelCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Type Parameters</Name>
+        <RequiredPrefixes>
+          <String>T</String>
+        </RequiredPrefixes>
+        <AffectedEntity>TypeParameter</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>PascalCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Constants</Name>
+        <AffectedEntity>ConstantField</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>AllUpper</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+      <NamingRule>
+        <Name>Constants (local)</Name>
+        <AffectedEntity>LocalConstant</AffectedEntity>
+        <VisibilityMask>VisibilityMask</VisibilityMask>
+        <NamingStyle>CamelCase</NamingStyle>
+        <IncludeInstanceMembers>True</IncludeInstanceMembers>
+        <IncludeStaticEntities>True</IncludeStaticEntities>
+      </NamingRule>
+    </Rules>
+  </NameConventionPolicy>
+  <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain">
+    <FileWidth>120</FileWidth>
+    <TabsToSpaces>False</TabsToSpaces>
+    <EolMarker>Unix</EolMarker>
+  </TextStylePolicy>
+  <TextStylePolicy inheritsSet="null" scope="application/x-csproject" />
+  <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/x-csproject" />
+  <TextStylePolicy inheritsSet="null" scope="application/x-msbuild" />
+  <XmlFormattingPolicy inheritsSet="null" scope="application/x-msbuild" />
+  <TextStylePolicy inheritsSet="null" scope="application/xml" />
+  <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
+</PolicySet>

@@ -1,0 +1,6 @@
+language: csharp
+solution: IchigoAI.sln
+mono:
+- latest
+script:
+- ./Build/runTests.sh
