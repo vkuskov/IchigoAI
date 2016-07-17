@@ -35,6 +35,7 @@ namespace IchigoAI.Test.BT {
 
         void before_each() {
             _task = new DecoratorTask();
+            initContext(_task);
         }
 
         void describe_decorator() {

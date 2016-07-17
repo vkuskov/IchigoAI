@@ -7,6 +7,10 @@ namespace IchigoAI {
     public struct CurrentTaskState {
         public TaskState state;
         public int counter;
+
+        public override string ToString() {
+            return string.Format("[state={0} counter={1}]", state, counter);
+        }
     }
 
     public class Context {
@@ -40,7 +44,7 @@ namespace IchigoAI {
             return _perTaskContext[index];
         }
 
-        public void SetTaslContext(int index, object state) {
+        public void SetTaskContext(int index, object state) {
             _perTaskContext[index] = state;
         }
 

@@ -44,6 +44,7 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 inverter = new Inverter();
                 inverter.Task = _task;
+                initContext(inverter);
             };
             it["Should run if task run"] = () => {
                 setReturn(_task, Status.Running);
@@ -65,6 +66,7 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 repeater = new Repeater();
                 repeater.Task = _task;
+                initContext(repeater);
             };
             it["Should run if task run"] = () => {
                 setReturn(_task, Status.Running);
@@ -86,6 +88,7 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 succeeder = new Succeeder();
                 succeeder.Task = _task;
+                initContext(succeeder);
             };
             it["Should run if task run"] = () => {
                 setReturn(_task, Status.Running);
@@ -107,6 +110,7 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 repeatUntilFail = new RepeatUntilFail();
                 repeatUntilFail.Task = _task;
+                initContext(repeatUntilFail);
             };
             it["Should run if task run"] = () => {
                 setReturn(_task, Status.Running);

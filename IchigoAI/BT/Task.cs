@@ -57,22 +57,32 @@ namespace IchigoAI.BT {
                 throw new InvalidOperationException("Context isn't initializd for this task or task tree");
             if (context == null)
                 throw new NullReferenceException("context is null");
-            var taskState = context.GetTaskState(TaskStateIndex);
-            if (taskState.state == TaskState.Invalid) {
+            var taskState = getTaskState(context);
+            if (taskState == TaskState.Invalid) {
                 onInit(context);
-                taskState.state = TaskState.Initialized;
+                taskState = TaskState.Initialized;
             }
-            if (taskState.state != TaskState.Execute) {
+            if (taskState != TaskState.Execute) {
                 onStart(context);
-                taskState.state = TaskState.Execute;
+                taskState = TaskState.Execute;
             }
             var status = onTick(context);
             if (status != Status.Running) {
                 onFinish(context);
-                taskState.state = TaskState.Finished;
+                taskState = TaskState.Finished;
             }
-            context.SetTaskState(TaskStateIndex, taskState);
+            setTaskState(context, taskState);
             return status;
+        }
+
+        private TaskState getTaskState(Context context) {
+            return context.GetTaskState(TaskStateIndex).state;
+        }
+
+        private void setTaskState(Context context, TaskState state) {
+            var taskState = context.GetTaskState(TaskStateIndex);
+            taskState.state = state;
+            context.SetTaskState(TaskStateIndex, taskState);
         }
 
         protected virtual void onInitContext(Context context) {
