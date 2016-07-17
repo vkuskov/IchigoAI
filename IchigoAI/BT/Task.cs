@@ -29,7 +29,7 @@ namespace IchigoAI.BT {
 
     [Serializable]
     public class Task : ITask {
-        protected int TaskStateIndex { get; private set; }
+        internal int TaskStateIndex { get; private set; }
 
         public string Name { get; set; }
         public string Comment { get; set; }
