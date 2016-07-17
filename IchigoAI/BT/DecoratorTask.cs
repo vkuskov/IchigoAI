@@ -24,41 +24,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using IchigoAI;
 
 namespace IchigoAI.BT {
 
     [Serializable]
     public class DecoratorTask : Task {
         
-        private ITask _task;
+        public ITask Task { get; set; }
 
-        public ITask Task {
-            get {
-                return _task;
-            }
-            set {                
-                _task = value;
-            }
-        }
-
-        protected sealed override void onTick() {
+        protected sealed override Status onTick(Context context) {
             if (Task != null) {
-                onDecorate(Task.Tick());
+                return onDecorate(Task.Tick(context));
             } else {
-                fail();
+                return Status.Failure;
             }
         }
 
-        protected virtual void onDecorate(Status result) {
+        protected virtual Status onDecorate(Status result) {
+            return Status.Failure;
         }
 
         public override bool Equals(object obj) {
             if (base.Equals(obj)) {
                 var decorator = (DecoratorTask)obj;
-                if (decorator._task != null && Task != null) {
-                    return decorator._task.Equals(Task);
+                if (decorator.Task != null && Task != null) {
+                    return decorator.Task.Equals(Task);
                 }
-                return decorator._task == Task;
+                return decorator.Task == Task;
             }
             return false;
         }

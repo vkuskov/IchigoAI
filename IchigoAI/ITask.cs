@@ -28,7 +28,8 @@ using System;
 namespace IchigoAI {
 
     public interface ITask {
-        Status Tick();
+        void InitContext(Context context);
+        Status Tick(Context context);
     }
 }
 

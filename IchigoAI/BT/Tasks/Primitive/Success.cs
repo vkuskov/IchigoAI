@@ -30,8 +30,8 @@ namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class Success : Task {
-        protected override void onTick() {
-            success();
+        protected override Status onTick(Context context) {
+            return Status.Success;
         }
     }
 }

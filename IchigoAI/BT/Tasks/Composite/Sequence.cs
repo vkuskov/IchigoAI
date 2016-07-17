@@ -25,28 +25,28 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT.Tasks {
 
     [Serializable]
-    public sealed class Sequence : CompositeTask{
-        private int _currentIndex = 0;
+    public sealed class Sequence : CompositeTask {
 
-        protected override void onStart() {
-            _currentIndex = 0;
+        protected override void onStart(Context context) {
+            setCurrentCounter(context, 0);
         }
 
-        protected override void onComposite(List<ITask> tasks) {
+        protected override Status onComposite(List<ITask> tasks, Context context) {
             var status = Status.Success;
-            while (status == Status.Success && _currentIndex < tasks.Count)
+            var counter = getCurrentCounter(context);
+            while (status == Status.Success && counter < tasks.Count)
             {
-                status = tasks[_currentIndex].Tick();
+                status = tasks[counter].Tick(context);
                 if (status == Status.Success) {
-                    _currentIndex++;
+                    counter++;
                 }
             }
-            setStatus(status);
+            setCurrentCounter(context, counter);
+            return status;
         }
     }
 }

@@ -25,9 +25,9 @@
 // THE SOFTWARE.
 using System;
 
-namespace IchigoAI.BT {
+namespace IchigoAI {
     
-    internal enum TaskState {
+    public enum TaskState {
         Invalid,
         Initialized,
         Execute,

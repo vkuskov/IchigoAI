@@ -24,65 +24,71 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT {
 
     [Serializable]
     public class Task : ITask {
-        private TaskState _taskState;
+        protected int TaskStateIndex { get; private set; }
 
         public string Name { get; set; }
         public string Comment { get; set; }
-        [JsonIgnore]
-        public Status Status { get; private set; }
 
         public Task() {
             Name = GetType().Name;
-            _taskState = TaskState.Invalid;
-            Status = Status.Running;
+            TaskStateIndex = -1;
         }
 
-        public Status Tick() {
-            if (_taskState == TaskState.Invalid) {
-                onInit();
-                _taskState = TaskState.Initialized;
+        public void InitContext(Context context) {
+            if (context == null)
+                throw new NullReferenceException("Can't init null task context");
+            int stateIndex = context.CreateState();
+            // Task tree should be determenistic
+            // So if we have got different index then tree was changed and our context is invalid
+            if (TaskStateIndex >= 0 && stateIndex != TaskStateIndex)
+                throw new InvalidOperationException(
+                    string.Format("Task already had state index {0} but context returned {1}. Context is different or task tree was changed", TaskStateIndex, stateIndex));
+            onInitContext(context);
+            TaskStateIndex = stateIndex;
+        }
+
+        public Status Tick(Context context) {
+            if (TaskStateIndex < 0)
+                throw new InvalidOperationException("Context isn't initializd for this task or task tree");
+            if (context == null)
+                throw new NullReferenceException("context is null");
+            var taskState = context.GetTaskState(TaskStateIndex);
+            if (taskState.state == TaskState.Invalid) {
+                onInit(context);
+                taskState.state = TaskState.Initialized;
             }
-            if (_taskState != TaskState.Execute) {
-                onStart();
-                _taskState = TaskState.Execute;
+            if (taskState.state != TaskState.Execute) {
+                onStart(context);
+                taskState.state = TaskState.Execute;
             }
-            Status = Status.Running;
-            onTick();
-            if (Status != Status.Running) {
-                onFinish();
-                _taskState = TaskState.Finished;
+            var status = onTick(context);
+            if (status != Status.Running) {
+                onFinish(context);
+                taskState.state = TaskState.Finished;
             }
-            return Status;
+            context.SetTaskState(TaskStateIndex, taskState);
+            return status;
         }
 
-        protected virtual void onInit() {
+        protected virtual void onInitContext(Context context) {
         }
 
-        protected virtual void onStart() {
+        protected virtual void onInit(Context context) {
         }
 
-        protected virtual void onFinish() {
+        protected virtual void onStart(Context context) {
         }
 
-        protected virtual void onTick() {
+        protected virtual void onFinish(Context context) {
         }
 
-        protected void setStatus(Status status) {
-            Status = status;
-        }
-
-        protected void success() {
-            Status = Status.Success;
-        }
-
-        protected void fail() {
-            Status = Status.Failure;
+        protected virtual Status onTick(Context context) {
+            return Status.Failure;
         }
 
         public override bool Equals(object obj) {

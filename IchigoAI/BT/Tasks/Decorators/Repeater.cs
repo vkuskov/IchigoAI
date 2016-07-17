@@ -24,12 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class Repeater : DecoratorTask {
+        protected override Status onDecorate(Status result) {
+            return Status.Running;
+        }
     }
 }
 

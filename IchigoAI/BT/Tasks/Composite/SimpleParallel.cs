@@ -31,16 +31,14 @@ namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class SimpleParallel :CompositeTask {
-        protected override void onComposite(List<ITask> tasks) {
+        protected override Status onComposite(List<ITask> tasks, Context context) {
             foreach (var it in tasks) {
-                var status = it.Tick();
-                // Possible problem: other tasks will continure running when we return.
-                // Maybe solve with removing state from tasks like I'm planning to do?
+                var status = it.Tick(context);
                 if (status != Status.Running) {
-                    setStatus(status);
-                    return;
+                    return status;
                 }
-            }                
+            }
+            return Status.Running;
         }
     }
 }
