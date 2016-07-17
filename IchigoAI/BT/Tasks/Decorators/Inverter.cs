@@ -30,12 +30,13 @@ namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class Inverter : DecoratorTask {
-        protected override void onDecorate(Status result) {
+        protected override Status onDecorate(Status result) {
             if (result == Status.Failure) {
-                success();
+                return Status.Success;
             } else if (result == Status.Success) {
-                fail();
+                return Status.Failure;
             }
+            return result;
         }
     }
 }

@@ -30,11 +30,12 @@ using IchigoAI.BT;
 
 namespace IchigoAI.Test.BT {
     
-    public class describe_DecoratorTask : nspec {
+    public class describe_DecoratorTask : TaskSpec {
         DecoratorTask _task;
 
         void before_each() {
             _task = new DecoratorTask();
+            initContext(_task);
         }
 
         void describe_decorator() {
@@ -47,10 +48,10 @@ namespace IchigoAI.Test.BT {
             it["Should tick it's subtask"] = () => {
                 var subTask = Substitute.For<ITask>();
                 _task.Task = subTask;
-                _task.Tick();
-                subTask.Received().Tick();
+                tick(_task);
+                subTask.Received().Tick(Arg.Is(_context));
             };
-            it["Should fail when tick without subtask"] = () => _task.Tick().should_be(Status.Failure);
+            it["Should fail when tick without subtask"] = () => tick(_task).should_be(Status.Failure);
         }
     }
 }

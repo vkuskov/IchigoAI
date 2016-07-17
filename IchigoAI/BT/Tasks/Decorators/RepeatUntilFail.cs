@@ -30,10 +30,11 @@ namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public class RepeatUntilFail : DecoratorTask {
-        protected override void onDecorate(Status result) {
+        protected override Status onDecorate(Status result) {
             if (result == Status.Failure) {
-                success();
+                return Status.Success;
             }
+            return Status.Running;
         }
     }
 }

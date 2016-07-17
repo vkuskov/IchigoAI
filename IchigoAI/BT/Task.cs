@@ -24,65 +24,81 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT {
 
     [Serializable]
     public class Task : ITask {
-        private TaskState _taskState;
+        protected int TaskStateIndex { get; private set; }
 
         public string Name { get; set; }
         public string Comment { get; set; }
-        [JsonIgnore]
-        public Status Status { get; private set; }
 
         public Task() {
             Name = GetType().Name;
-            _taskState = TaskState.Invalid;
-            Status = Status.Running;
+            TaskStateIndex = -1;
         }
 
-        public Status Tick() {
-            if (_taskState == TaskState.Invalid) {
-                onInit();
-                _taskState = TaskState.Initialized;
+        public void InitContext(Context context) {
+            if (context == null)
+                throw new NullReferenceException("Can't init null task context");
+            int stateIndex = context.CreateState();
+            // Task tree should be determenistic
+            // So if we have got different index then tree was changed and our context is invalid
+            if (TaskStateIndex >= 0 && stateIndex != TaskStateIndex)
+                throw new InvalidOperationException(
+                    string.Format("Task already had state index {0} but context returned {1}. Context is different or task tree was changed", TaskStateIndex, stateIndex));
+            onInitContext(context);
+            TaskStateIndex = stateIndex;
+        }
+
+        public Status Tick(Context context) {
+            if (TaskStateIndex < 0)
+                throw new InvalidOperationException("Context isn't initializd for this task or task tree");
+            if (context == null)
+                throw new NullReferenceException("context is null");
+            var taskState = getTaskState(context);
+            if (taskState == TaskState.Invalid) {
+                onInit(context);
+                taskState = TaskState.Initialized;
             }
-            if (_taskState != TaskState.Execute) {
-                onStart();
-                _taskState = TaskState.Execute;
+            if (taskState != TaskState.Execute) {
+                onStart(context);
+                taskState = TaskState.Execute;
             }
-            Status = Status.Running;
-            onTick();
-            if (Status != Status.Running) {
-                onFinish();
-                _taskState = TaskState.Finished;
+            var status = onTick(context);
+            if (status != Status.Running) {
+                onFinish(context);
+                taskState = TaskState.Finished;
             }
-            return Status;
+            setTaskState(context, taskState);
+            return status;
         }
 
-        protected virtual void onInit() {
+        private TaskState getTaskState(Context context) {
+            return context.GetTaskState(TaskStateIndex).state;
         }
 
-        protected virtual void onStart() {
+        private void setTaskState(Context context, TaskState state) {
+            var taskState = context.GetTaskState(TaskStateIndex);
+            taskState.state = state;
+            context.SetTaskState(TaskStateIndex, taskState);
         }
 
-        protected virtual void onFinish() {
+        protected virtual void onInitContext(Context context) {
         }
 
-        protected virtual void onTick() {
+        protected virtual void onInit(Context context) {
         }
 
-        protected void setStatus(Status status) {
-            Status = status;
+        protected virtual void onStart(Context context) {
         }
 
-        protected void success() {
-            Status = Status.Success;
+        protected virtual void onFinish(Context context) {
         }
 
-        protected void fail() {
-            Status = Status.Failure;
+        protected virtual Status onTick(Context context) {
+            return Status.Failure;
         }
 
         public override bool Equals(object obj) {

@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 using System;
 using NSpec;
+using NSubstitute;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text;
@@ -33,6 +34,23 @@ using IchigoAI.BT;
 namespace IchigoAI.Test.BT {
     
     public abstract class TaskSpec : nspec {
+        protected Context _context;
+
+        void before_each() {
+            _context = new Context();
+        }
+
+        protected void initContext(ITask task) {
+            task.InitContext(_context);
+        }
+
+        protected Status tick(ITask task) {
+            return task.Tick(_context);
+        }
+
+        protected void setReturn(ITask task, Status status) {
+            task.Tick(Arg.Is(_context)).Returns(status);       
+        }
 
         protected void checkSerialization(Task task) {
             JsonSerializerSettings settings = new JsonSerializerSettings() {

@@ -37,6 +37,7 @@ namespace IchigoAI.Test.BT {
 
         void before_each() {
             _task = new Task();
+            initContext(_task);
         }
 
         void describe_default_state() {
@@ -48,12 +49,11 @@ namespace IchigoAI.Test.BT {
                 _task.Comment = TASK_COMMENT;
                 _task.Comment.should_be(TASK_COMMENT);
             };
-            it["Should be in running state"] = () => _task.Status.should_be(Status.Running);
             it["Should serialize"] = () => checkSerialization(_task);
         }
 
         void describe_default_behaviour() {
-            it["Should be in running state after tick"] = () =>  _task.Tick().should_be(Status.Running);
+            it["Should be in failed state after tick"] = () =>  tick(_task).should_be(Status.Failure);
         }
     }
 }

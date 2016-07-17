@@ -25,27 +25,27 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class Selector : CompositeTask {
-        private int _currentTask;
-
-        protected override void onStart() {
-            _currentTask = 0;
+        
+        protected override void onStart(Context context) {
+            setCurrentCounter(context, 0);
         }
 
-        protected override void onComposite(List<ITask> tasks) {
+        protected override Status onComposite(List<ITask> tasks, Context context) {
             var status = Status.Failure;
-            while (status == Status.Failure && _currentTask < tasks.Count) {
-                status = tasks[_currentTask].Tick();
+            var counter = getCurrentCounter(context);
+            while (status == Status.Failure && counter < tasks.Count) {
+                status = tasks[counter].Tick(context);
                 if (status == Status.Failure) {
-                    _currentTask++;
+                    counter++;
                 }
             }
-            setStatus(status);
+            setCurrentCounter(context, counter);
+            return status;
         }
     }
 }

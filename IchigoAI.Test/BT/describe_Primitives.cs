@@ -29,18 +29,24 @@ using IchigoAI.BT;
 using IchigoAI.BT.Tasks;
 
 namespace IchigoAI.Test.BT {
-    public class describe_Primitives : nspec {
+    public class describe_Primitives : TaskSpec {
         
         void describe_Success() {
             Task task = null;
-            beforeEach = () => task = new Success();
-            it["Should always success"] = () => task.Tick().should_be(Status.Success);
+            beforeEach = () => {
+                task = new Success();
+                initContext(task);
+            };
+            it["Should always success"] = () => tick(task).should_be(Status.Success);
         }
 
         void describe_Failure() {
             Task task = null;
-            beforeEach = () => task = new Failure();
-            it["Should always fail"] = () => task.Tick().should_be(Status.Failure);
+            beforeEach = () => {
+                task = new Failure();
+                initContext(task);
+            };
+            it["Should always fail"] = () => tick(task).should_be(Status.Failure);
         }
     }
 }

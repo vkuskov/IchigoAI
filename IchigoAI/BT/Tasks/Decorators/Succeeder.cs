@@ -30,10 +30,11 @@ namespace IchigoAI.BT.Tasks {
 
     [Serializable]
     public sealed class Succeeder : DecoratorTask {
-        protected override void onDecorate(Status result) {
+        protected override Status onDecorate(Status result) {
             if (result != Status.Running) {
-                success();
+                return Status.Success;
             }
+            return Status.Running;
         }
     }
 }

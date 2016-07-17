@@ -33,7 +33,7 @@ using IchigoAI.BT.Tasks;
 namespace IchigoAI.Test.BT {
     
     public class describe_Decorators : TaskSpec {
-        ITask _task;
+        private ITask _task;
 
         void before_each() {
             _task = Substitute.For<ITask>();
@@ -44,18 +44,19 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 inverter = new Inverter();
                 inverter.Task = _task;
+                initContext(inverter);
             };
             it["Should run if task run"] = () => {
-                _task.Tick().Returns(Status.Running);
-                inverter.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Running);
+                tick(inverter).should_be(Status.Running);
             };
             it["Should fail if task succeeded"] = () => {
-                _task.Tick().Returns(Status.Success);
-                inverter.Tick().should_be(Status.Failure);
+                setReturn(_task, Status.Success);
+                tick(inverter).should_be(Status.Failure);
             };
             it["Should success if task failed"] = () => {
-                _task.Tick().Returns(Status.Failure);
-                inverter.Tick().should_be(Status.Success);
+                setReturn(_task, Status.Failure);
+                tick(inverter).should_be(Status.Success);
             };
             it["Should serialize"] = () => testSerialize(inverter);
         }
@@ -65,18 +66,19 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 repeater = new Repeater();
                 repeater.Task = _task;
+                initContext(repeater);
             };
             it["Should run if task run"] = () => {
-                _task.Tick().Returns(Status.Running);
-                repeater.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Running);
+                tick(repeater).should_be(Status.Running);
             };
             it["Should run if task succeeded"] = () => {
-                _task.Tick().Returns(Status.Success);
-                repeater.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Success);
+                tick(repeater).should_be(Status.Running);
             };
             it["Should run if task failed"] = () => {
-                _task.Tick().Returns(Status.Failure);
-                repeater.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Failure);
+                tick(repeater).should_be(Status.Running);
             };
             it["Should serialize"] = () => testSerialize(repeater);
         }
@@ -86,18 +88,19 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 succeeder = new Succeeder();
                 succeeder.Task = _task;
+                initContext(succeeder);
             };
             it["Should run if task run"] = () => {
-                _task.Tick().Returns(Status.Running);
-                succeeder.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Running);
+                tick(succeeder).should_be(Status.Running);
             };
             it["Should success if task succeeded"] = () => {
-                _task.Tick().Returns(Status.Success);
-                succeeder.Tick().should_be(Status.Success);
+                setReturn(_task, Status.Success);
+                tick(succeeder).should_be(Status.Success);
             };
             it["Should success if task failed"] = () => {
-                _task.Tick().Returns(Status.Failure);
-                succeeder.Tick().should_be(Status.Success);
+                setReturn(_task, Status.Failure);
+                tick(succeeder).should_be(Status.Success);
             };
             it["Should serialize"] = () => testSerialize(succeeder);
         }
@@ -107,18 +110,19 @@ namespace IchigoAI.Test.BT {
             beforeEach = () => {
                 repeatUntilFail = new RepeatUntilFail();
                 repeatUntilFail.Task = _task;
+                initContext(repeatUntilFail);
             };
             it["Should run if task run"] = () => {
-                _task.Tick().Returns(Status.Running);
-                repeatUntilFail.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Running);
+                tick(repeatUntilFail).should_be(Status.Running);
             };
             it["Should run if task succeeded"] = () => {
-                _task.Tick().Returns(Status.Success);
-                repeatUntilFail.Tick().should_be(Status.Running);
+                setReturn(_task, Status.Success);
+                tick(repeatUntilFail).should_be(Status.Running);
             };
             it["Should success if task failed"] = () => {
-                _task.Tick().Returns(Status.Failure);
-                repeatUntilFail.Tick().should_be(Status.Success);
+                setReturn(_task, Status.Failure);
+                tick(repeatUntilFail).should_be(Status.Success);
             };
             it["Should serialize"] = () => testSerialize(repeatUntilFail);
         }

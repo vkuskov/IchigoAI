@@ -38,7 +38,6 @@
     <Compile Include="BT\CompositeTask.cs" />
     <Compile Include="BT\DecoratorTask.cs" />
     <Compile Include="BT\Task.cs" />
-    <Compile Include="BT\TaskState.cs" />
     <Compile Include="ITask.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="BT\Tasks\Composite\Selector.cs" />
@@ -50,6 +49,8 @@
     <Compile Include="BT\Tasks\Decorators\Succeeder.cs" />
     <Compile Include="BT\Tasks\Primitive\Failure.cs" />
     <Compile Include="BT\Tasks\Primitive\Success.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="TaskState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

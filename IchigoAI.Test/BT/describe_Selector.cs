@@ -36,69 +36,70 @@ namespace IchigoAI.Test.BT {
         void before_each() {
             _selector = new Selector();
             addAllTo(_selector);
+            initContext(_selector);
         }
 
         void describe_sequence() {
             it["Should success after first task success"] = () => {
                 setAll(Status.Failure);
-                _tasks[1].Tick().Returns(Status.Success);
-                _selector.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Success);
+                tick(_selector).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should running if not-failing task is running"] = () => {
                 setAll(Status.Failure);
-                _tasks[1].Tick().Returns(Status.Running);
-                _selector.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Running);
+                tick(_selector).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should continue running if not-failing task is running"] = () => {
                 setAll(Status.Failure);
-                _tasks[1].Tick().Returns(Status.Running);
-                _selector.Tick().should_be(Status.Running);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Running);
+                tick(_selector).should_be(Status.Running);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _selector.Tick().should_be(Status.Running);
-                _tasks[0].DidNotReceive().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                tick(_selector).should_be(Status.Running);
+                _tasks[0].DidNotReceive().Tick(Arg.Any<Context>());
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should fail is all tasks failed"] = () => {
                 setAll(Status.Failure);
-                _selector.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_selector).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should start from first node after success"] = () => {
                 setAll(Status.Failure);
-                _tasks[1].Tick().Returns(Status.Success);
-                _selector.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                setReturn(1, Status.Success);
+                tick(_selector).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
                 clearCalls();
-                _selector.Tick().should_be(Status.Success);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].DidNotReceive().Tick();
+                tick(_selector).should_be(Status.Success);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].DidNotReceive().Tick(Arg.Any<Context>());
             };
             it["Should start from first node after fail"] = () => {
                 setAll(Status.Failure);
-                _selector.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_selector).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
                 clearCalls();
-                _selector.Tick().should_be(Status.Failure);
-                _tasks[0].Received().Tick();
-                _tasks[1].Received().Tick();
-                _tasks[2].Received().Tick();
+                tick(_selector).should_be(Status.Failure);
+                _tasks[0].Received().Tick(Arg.Is(_context));
+                _tasks[1].Received().Tick(Arg.Is(_context));
+                _tasks[2].Received().Tick(Arg.Is(_context));
             };
             it["Should serialize"] = () => testSerialization(_selector);                
         }

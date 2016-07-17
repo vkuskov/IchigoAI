@@ -25,38 +25,53 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace IchigoAI.BT {
 
     [Serializable]
     public class CompositeTask : Task {
-        private List<ITask> _tasks = new List<ITask>();
+        public List<ITask> Tasks { get; private set; }
 
-        public List<ITask> Tasks {
-            get {
-                return _tasks;
-            }
+        public CompositeTask() {
+            Tasks = new List<ITask>();
         }
 
-        protected override void onTick() {
-            if (_tasks.Count > 0) {
-                onComposite(_tasks);
+        protected override Status onTick(Context context) {
+            if (Tasks.Count > 0) {
+                return onComposite(Tasks, context);
             } else {
-                fail();
+                return Status.Failure;
             }
         }
 
-        protected virtual void onComposite(List<ITask> tasks) {
+        protected override void onInitContext(Context context) {
+            foreach (var it in Tasks) {
+                it.InitContext(context);
+            }
+        }
+
+        protected virtual Status onComposite(List<ITask> tasks, Context context) {
+            return Status.Failure;
+        }
+
+        protected int getCurrentCounter(Context context) {
+            var taskState = context.GetTaskState(TaskStateIndex);
+            return taskState.counter;
+        }
+
+        protected void setCurrentCounter(Context context, int counter) {
+            var taskState = context.GetTaskState(TaskStateIndex);
+            taskState.counter = counter;
+            context.SetTaskState(TaskStateIndex, taskState);
         }
 
         public override bool Equals(object obj) {
             if (base.Equals(obj)) {
                 var composite = (CompositeTask)obj;
-                if (composite._tasks.Count == _tasks.Count) {
-                    for (int i = 0; i <_tasks.Count; ++i) {
-                        var left = _tasks[i];
-                        var right = composite._tasks[i];
+                if (composite.Tasks.Count == Tasks.Count) {
+                    for (int i = 0; i < Tasks.Count; ++i) {
+                        var left = Tasks[i];
+                        var right = composite.Tasks[i];
                         if (left != null && right != null) {
                             if (!left.Equals(right)) {
                                 return false;
